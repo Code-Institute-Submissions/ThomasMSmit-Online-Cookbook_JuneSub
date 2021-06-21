@@ -7,12 +7,16 @@ from functools import wraps
 
 app = Flask(__name__)
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
-app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
+app.config["MONGO_URI"] = os.environ.get("MONGO_URI", 'mongodb://localhost')
 app.secret_key = os.environ.get("SECRET_KEY")
 mongo = PyMongo(app)
 
-
-placeholder_image = 'http://placehold.jp/48/dedede/adadad/400x400.jpg?text=Image%20Not%20Available'
+# MongoDb collection variables
+users = mongo.db.users
+cuisines = mongo.db.cuisines
+recipes = mongo.db.recipes
+allergens = mongo.db.allergens
+ingredients =mongo.db.ingredients
 
 # Manage session user
 @app.before_request
@@ -212,7 +216,7 @@ def edit_recipe(recipe_id):
 @app.route('/update_recipe/<recipe_id>', methods=["POST"])
 def update_recipe(recipe_id):
     
-    # orangise method steps from form and build new ordered array containing them
+    # organise method steps from form and build new ordered array containing them
     step_keys = []
     method_steps = []
     for stepkey in request.form.to_dict():
@@ -268,7 +272,7 @@ def delete_recipe(recipe_id):
 @app.route('/insert_recipe', methods=['POST'])
 def insert_recipe():
     
-    # orangise method steps from form and build new ordered array containing them
+    # organise method steps from form and build new ordered array containing them
     step_keys = []
     method_steps = []
     for stepkey in request.form.to_dict():
