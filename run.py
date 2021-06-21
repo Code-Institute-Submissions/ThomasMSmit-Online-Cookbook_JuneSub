@@ -6,13 +6,11 @@ from passlib.hash import pbkdf2_sha256
 from functools import wraps
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
+app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
+app.secret_key = os.environ.get("SECRET_KEY")
+mongo = PyMongo(app)
 
-app.config["MONGO_DBNAME"] = "cookbook"
-app.config["MONGO_URI"] = os.getenv('MONGO_URI', 'mongodb://localhost')
-
-client = pymongo.MongoClient(os.getenv('MONGO_URI'))
-db = client.cookbook
 
 placeholder_image = 'http://placehold.jp/48/dedede/adadad/400x400.jpg?text=Image%20Not%20Available'
 
