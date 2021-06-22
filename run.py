@@ -12,6 +12,7 @@ app.secret_key = os.environ.get("SECRET_KEY")
 mongo = PyMongo(app)
 
 # MongoDb collection variables
+db = mongo.db
 users = mongo.db.users
 cuisines = mongo.db.cuisines
 recipes = mongo.db.recipes
