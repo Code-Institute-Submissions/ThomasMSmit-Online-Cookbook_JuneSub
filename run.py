@@ -1,9 +1,14 @@
 import os
+from datetime import datetime
+from flask import (
+    Flask, flash, render_template,
+    redirect, request, session, url_for, g)
+from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
-from flask import Flask, render_template, url_for, redirect, request, flash, session, g
-from flask_pymongo import PyMongo, pymongo
-from passlib.hash import pbkdf2_sha256
+from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
+if os.path.exists("env.py"):
+    import env
 
 app = Flask(__name__)
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
@@ -12,7 +17,6 @@ app.secret_key = os.environ.get("SECRET_KEY")
 mongo = PyMongo(app)
 
 # MongoDb collection variables
-db = mongo.db
 users = mongo.db.users
 cuisines = mongo.db.cuisines
 recipes = mongo.db.recipes
@@ -25,7 +29,7 @@ def before_request():
     g.user = None
     if 'user' in session:
         g.user = session['user']
-
+        
 # Check if user is logged in
 def login_required(f):
     @wraps(f)
@@ -35,15 +39,59 @@ def login_required(f):
             return redirect(url_for('home'))
         return f(*args, **kwargs)
     return decorated_function
-        
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    """
+    Function for registering a new user.
+    Also checks if username and/or password
+    already exists in the database.
+    Redirects to recipelist
+    """
+    # Checks if user is not already logged in
+    if g.user in session:
+        flash('You are already registered!')
+        return redirect(url_for('home'))
+    # Checks if the passwords match
+    if request.method == 'POST':
+        form = request.form.to_dict()
+        if form['password'] == form['password1']:
+            registered_user = users.find_one(
+                            {"username": form['username']})
+    # Checks if username already exists
+            if registered_user:
+                flash("Username already taken")
+                return redirect(url_for('signup'))
+    # Hashes the password and puts new user in db
+            else:
+                hashed_password = generate_password_hash(form['password'])
+                users.insert_one(
+                    {
+                        'username': form['username'],
+                        'password': hashed_password
+                    }
+                )
+                user_in_db = users.find_one(
+                        {"username": form['username']})
+                if user_in_db:
+                    session['user'] = user_in_db['username']
+                    flash("Account successfully created")
+                    return redirect(url_for('signup'))
+                else:
+                    flash("There was a problem. Please try again.")
+                    return redirect(url_for('signup'))
+        else:
+            flash("Passwords don't match")
+            return redirect(url_for('signup'))
+    return render_template('signup.html')
 @app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
         
         # Retrieve users from database and check that username exists
+        form = request.form.to_dict()
         username_entered = request.form.get('username')
-        this_user_in_db = db.users.find_one({'username': username_entered})
+        this_user_in_db = users.find_one({'username': username_entered})
         if not this_user_in_db:
             flash('Username does not exist', 'error')
             return render_template('login.html')
@@ -55,11 +103,13 @@ def home():
             return render_template('login.html')
         
         # check password against this username's user record in database
-        if pbkdf2_sha256.verify(password_entered, this_user_in_db['password']):
+        if this_user_in_db:
+            if check_password_hash(this_user_in_db['password'], form['password']):
+                if form['password'] == form['password1']:
             # once verified with user record in database, start a new session and redirect to main recipelist
-            session['user'] = username_entered
-            flash('You have successfully logged in', 'success')
-            return redirect(url_for('recipelist'))
+                    session['user'] = username_entered
+                    flash('You have successfully logged in', 'success')
+                    return redirect(url_for('recipelist'))
         else:
             # else if password does not match, flash error message
             flash('The password did not match the user profile', 'error')
@@ -69,7 +119,25 @@ def home():
         return redirect(url_for('recipelist'))
         
     return render_template('login.html')
-
+    #     # Begin creating new_user dict for possible insertion to database
+    #     new_user = {}
+    #     new_user['username'] = request.form.get('username')
+    #     new_user['email'] = request.form.get('email')
+    #     new_user['password'] = pbkdf2_sha256.hash(request.form.get('password'))
+    #     new_user['password_reconfirm'] = pbkdf2_sha256.verify(request.form.get('password-reconfirm'), new_user['password'])
+        
+    #     # if password entered is not properly re-confirmed
+    #     if not new_user['password_reconfirm']:
+    #         flash('Passwords did not match', 'error')
+    #         return render_template('signup.html')    
+        
+    #     # Once all required field are populated without error above, insert new user into database and redirect to login page
+    #     if new_user['username'] and new_user['email'] and new_user['password']:
+    #         new_user['liked_recipes'] = []
+    #         db.users.insert_one(new_user)
+    #         flash('You have successfully signed up, you can now log in', 'success')
+    #         return redirect(url_for('home'))
+    # return render_template('signup.html')
 @app.route('/logout')
 @login_required
 def logout():
@@ -77,44 +145,10 @@ def logout():
     session.pop('user', None)
     flash('You have successfully logged out', 'success')
     return redirect(url_for('home'))
-    
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    if request.method == 'POST':
-        
-        # Retrieve users from database and check if requested username already exists
-        users_in_db = list(db.users.find())
-        if len(users_in_db) > 0:
-            for user in users_in_db:
-                if user['username'] == request.form.get('username'):
-                    flash('Username is already taken', 'error')
-                    return render_template('signup.html')
-        
-        # Begin creating new_user dict for possible insertion to database
-        new_user = {}
-        new_user['username'] = request.form.get('username')
-        new_user['email'] = request.form.get('email')
-        new_user['password'] = pbkdf2_sha256.hash(request.form.get('password'))
-        new_user['password_reconfirm'] = pbkdf2_sha256.verify(request.form.get('password-reconfirm'), new_user['password'])
-        
-        # if password entered is not properly re-confirmed
-        if not new_user['password_reconfirm']:
-            flash('Passwords did not match', 'error')
-            return render_template('signup.html')    
-        
-        # Once all required field are populated without error above, insert new user into database and redirect to login page
-        if new_user['username'] and new_user['email'] and new_user['password']:
-            new_user['liked_recipes'] = []
-            db.users.insert_one(new_user)
-            flash('You have successfully signed up, you can now log in', 'success')
-            return redirect(url_for('home'))
-
-    return render_template('signup.html')
-
 @app.route('/recipelist')
 def recipelist():
-    cuisines = list(db.cuisines.find().sort('cuisine_name', pymongo.ASCENDING))
-    recipes = list(db.recipes.find())
+    cuisines = list(cuisines.find().sort('cuisine_name', pymongo.ASCENDING))
+    recipes = list(recipes.find())
     
     for arg in request.args:
         if 'recipe_search' in arg:
@@ -135,46 +169,43 @@ def recipelist():
         
         elif 'sort' in arg:
             if request.args['sort'] == 'votes':
-                new_recipe_list = list(db.recipes.find().sort('upvotes', pymongo.DESCENDING))
+                new_recipe_list = list(recipes.find().sort('upvotes', pymongo.DESCENDING))
                 return render_template('recipelist.html', recipes=new_recipe_list, cuisines=cuisines, user=g.user)
             elif request.args['sort'] == 'asc':
-                new_recipe_list = list(db.recipes.find().sort('recipe_name', pymongo.ASCENDING))
+                new_recipe_list = list(recipes.find().sort('recipe_name', pymongo.ASCENDING))
                 return render_template('recipelist.html', recipes=new_recipe_list, cuisines=cuisines, user=g.user)   
             elif request.args['sort'] == 'dsc':
-                new_recipe_list = list(db.recipes.find().sort('recipe_name', pymongo.DESCENDING))
+                new_recipe_list = list(recipes.find().sort('recipe_name', pymongo.DESCENDING))
                 return render_template('recipelist.html', recipes=new_recipe_list, cuisines=cuisines, user=g.user)
                 
     return render_template('recipelist.html', recipes=recipes, cuisines=cuisines, user=g.user)
-
 @app.route('/recipe/<recipe_id>/')
 def recipe(recipe_id):
-    this_recipe = db.recipes.find_one({'_id': ObjectId(recipe_id)})
+    this_recipe = recipes.find_one({'_id': ObjectId(recipe_id)})
     recipe_id = str(this_recipe['_id'])
     allergens = list(db.allergens.find())
     return render_template('recipe.html', recipe=this_recipe, allergens=allergens, user=g.user, recipe_id=recipe_id)
-
 @app.route('/add_like/<recipe_id>/<user>/', methods=['POST'])
 def add_like(recipe_id, user):
     
     # update liked_by list in recipe
-    this_recipe = db.recipes.find_one({'_id': ObjectId(recipe_id)})
+    this_recipe = recipes.find_one({'_id': ObjectId(recipe_id)})
     liked_by = list(this_recipe['liked_by'])
     if user not in liked_by:
         liked_by.append(user)
     this_recipe['liked_by'] = liked_by
     this_recipe['upvotes'] = len(liked_by)
-    db.recipes.update_one({'_id': ObjectId(recipe_id)}, {'$set': this_recipe })
+    recipes.update_one({'_id': ObjectId(recipe_id)}, {'$set': this_recipe })
     
     # update liked_recipes list in user
-    this_user = db.users.find_one({'username': user})
+    this_user = users.find_one({'username': user})
     liked_recipes = list(this_user['liked_recipes'])
     if recipe_id not in liked_recipes:
         liked_recipes.append(recipe_id)
     this_user['liked_recipes'] = liked_recipes
-    db.users.update_one({'username': user}, {'$set': this_user })
+    users.update_one({'username': user}, {'$set': this_user })
     
     return "Recipe Liked by User"
-
 @app.route('/remove_like/<recipe_id>/<user>/', methods=['POST'])
 def remove_like(recipe_id, user):
     
@@ -185,33 +216,33 @@ def remove_like(recipe_id, user):
         liked_by.remove(user)
     this_recipe['liked_by'] = liked_by
     this_recipe['upvotes'] = len(liked_by)
-    db.recipes.update_one({'_id': ObjectId(recipe_id)}, {'$set': this_recipe })
+    recipes.update_one({'_id': ObjectId(recipe_id)}, {'$set': this_recipe })
     
     # update liked_recipes list in user
-    this_user = db.users.find_one({'username': user})
+    this_user = users.find_one({'username': user})
     liked_recipes = list(this_user['liked_recipes'])
     if recipe_id in liked_recipes:
         liked_recipes.remove(recipe_id)
     this_user['liked_recipes'] = liked_recipes
-    db.users.update_one({'username': user}, {'$set': this_user })
+    users.update_one({'username': user}, {'$set': this_user })
     
     return "Recipe Un-Liked by User"
     
 @app.route('/add_recipe')
 @login_required
 def add_recipe():
-    cuisines = list(db.cuisines.find().sort('cuisine_name', pymongo.ASCENDING))
-    ingredients = list(db.ingredients.find().sort('ingredient_name', pymongo.ASCENDING))
-    allergens = list(db.allergens.find())
+    cuisines = list(cuisines.find().sort('cuisine_name', pymongo.ASCENDING))
+    ingredients = list(ingredients.find().sort('ingredient_name', pymongo.ASCENDING))
+    allergens = list(allergens.find())
     return render_template('add_recipe.html', cuisines=cuisines, ingredients=ingredients, allergens=allergens, user=g.user)
     
 @app.route('/edit_recipe/<recipe_id>/')
 @login_required
 def edit_recipe(recipe_id):
-    cuisines = list(db.cuisines.find().sort('cuisine_name', pymongo.ASCENDING))
-    ingredients = list(db.ingredients.find().sort('ingredient_name', pymongo.ASCENDING))
-    allergens = list(db.allergens.find())
-    this_recipe = db.recipes.find_one({'_id': ObjectId(recipe_id)})
+    cuisines = list(cuisines.find().sort('cuisine_name', pymongo.ASCENDING))
+    ingredients = list(ingredients.find().sort('ingredient_name', pymongo.ASCENDING))
+    allergens = list(allergens.find())
+    this_recipe = recipes.find_one({'_id': ObjectId(recipe_id)})
     return render_template('edit_recipe.html', cuisines=cuisines, ingredients=ingredients, allergens=allergens, recipe=this_recipe, user=g.user)
     
 @app.route('/update_recipe/<recipe_id>', methods=["POST"])
@@ -241,13 +272,12 @@ def update_recipe(recipe_id):
         ingredients_arr.append([qty, ing])
     
     # find selected allergens and form new array containing them
-    allergens = db.allergens.find()
+    allergens = allergens.find()
     allergen_arr = []
     for allergen in list(allergens):
         for key in request.form.to_dict():
             if key == allergen['allergen_name']:
                 allergen_arr.append(key)
-
     # create new document that will be used as the update dict to update database
     updated_recipe = {}
     updated_recipe['recipe_name'] = request.form.get('recipe_name')
@@ -259,17 +289,16 @@ def update_recipe(recipe_id):
         updated_recipe['image_url'] = placeholder_image
     else:
         updated_recipe['image_url'] = request.form.get('image_url')
-    db.recipes.update_one({'_id': ObjectId(recipe_id)}, {'$set': updated_recipe })
+    recipes.update_one({'_id': ObjectId(recipe_id)}, {'$set': updated_recipe })
     
     return redirect(url_for('recipelist'))
 
 @app.route('/delete_recipe/<recipe_id>')
 @login_required
 def delete_recipe(recipe_id):
-    db.recipes.delete_one({'_id': ObjectId(recipe_id)})
+    recipes.delete_one({'_id': ObjectId(recipe_id)})
     flash('Recipe successfully deleted', 'success')
     return redirect(url_for('recipelist'))    
-
 @app.route('/insert_recipe', methods=['POST'])
 def insert_recipe():
     
@@ -297,7 +326,7 @@ def insert_recipe():
         ingredients_arr.append([qty, ing])
     
     # find selected allergens and form new array containing them
-    allergens = db.allergens.find()
+    allergens = allergens.find()
     allergen_arr = []
     for allergen in list(allergens):
         for key in request.form.to_dict():
@@ -320,16 +349,13 @@ def insert_recipe():
     db.recipes.insert_one(new_recipe)
     flash('Recipe successfully created', 'success')
     return redirect(url_for('recipelist'))
-
 # Error Handling
-@app.errorhandler(404)
-def page_not_found(error):
-    return render_template('404.html'), 404
-
-@app.errorhandler(500)
-def something_wrong(error):
-    return render_template('500.html'), 500
-
+# @app.errorhandler(404)
+# def page_not_found(error):
+#     return render_template('404.html'), 404
+# @app.errorhandler(500)
+# def something_wrong(error):
+#     return render_template('500.html'), 500
 # run application
 if __name__ == '__main__':
     app.run(host=os.environ.get('IP'),
