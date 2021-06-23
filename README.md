@@ -1,6 +1,6 @@
 # Online Cookbook
 
-*learn how to cook
+learn how to cook
 
 - [Online Cookbook](#online-cookbook)
   - [Project goals](#project-goals)
@@ -120,7 +120,7 @@ I wanted to keep the design simple so you can access the info you need as fast a
 
 I made use of [Coolors](https://coolors.co/) for creating the color scheme used on this site.
 
-![Color scheme](static/images/colorpallet.png)
+![Color scheme](readmecontent/images/colorpallet.png)
 
 - F0EAD6: Is more of a light beige color to take away most white backgrounds to make the site a little less harsh on the eyes.
 - FFFFFF: Standard white, mostly used as background color for the create recipe form and account page.
@@ -150,10 +150,13 @@ For the structure of the site I have used [Materialize](https://materializecss.c
 
 ### Wireframes
 
+I made my wireframes with [Balsamiq](https://balsamiq.com/)
 
+View my wireframes [here](https://github.com/ThomasMSmit/Online-Cookbook/tree/master/readmecontent/wireframes)
 
-
-
+Direct link to wireframes:
+[Desktop](https://github.com/ThomasMSmit/Online-Cookbook/blob/master/readmecontent/wireframes/Wireframes%20Desktop.pdf)
+[Tablet/Mobile](https://github.com/ThomasMSmit/Online-Cookbook/blob/master/readmecontent/wireframes/Wireframes%20Tablet_Mobile.pdf)
 
 ### Flowcharts
 
@@ -189,11 +192,9 @@ For the structure of the site I have used [Materialize](https://materializecss.c
 
 ### Features to be implemented
 
-
-
-
-
-
+- A Chatroom for users to talk about the recipes they created. Or to ask questions about existing recipes.
+- The ability to add instruction videos to created recipes for more in depth explanation.
+- More extensive filter options on the recipes page. For example a filter for allergies, preparation time and what kind of meal(Breakfast, lunch, Dinner).
 
 ## Technologies used
 
