@@ -155,8 +155,8 @@ I made my wireframes with [Balsamiq](https://balsamiq.com/)
 View my wireframes [here](https://github.com/ThomasMSmit/Online-Cookbook/tree/master/readmecontent/wireframes)
 
 Direct link to wireframes:
-[Desktop](https://github.com/ThomasMSmit/Online-Cookbook/blob/master/readmecontent/wireframes/Wireframes%20Desktop.pdf)
-[Tablet/Mobile](https://github.com/ThomasMSmit/Online-Cookbook/blob/master/readmecontent/wireframes/Wireframes%20Tablet_Mobile.pdf)
+[Desktop](https://github.com/ThomasMSmit/Online-Cookbook/blob/master/readmecontent/wireframes/Wireframes_Desktop.pdf)
+[Tablet/Mobile](https://github.com/ThomasMSmit/Online-Cookbook/blob/master/readmecontent/wireframes/Wireframes_Tablet_Mobile.pdf)
 
 ### Flowcharts
 
