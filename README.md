@@ -251,7 +251,7 @@ Direct link to wireframes:
 
 Bug: jinja2.exceptions.TemplateSyntaxError: Unexpected end of template.
 
-Fix: Added {% endblock %} to recipe.html file as it was not there.
+Fix: Added %endblock% to recipe.html file as it was not there.
 
 Bug: AttributeError: 'Cursor' object has no attribute 'find'.
 
