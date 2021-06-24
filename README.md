@@ -249,10 +249,13 @@ Direct link to wireframes:
 
 ### In development
 
+Bug: jinja2.exceptions.TemplateSyntaxError: Unexpected end of template.
 
+Fix: Added {% endblock %} to recipe.html file as it was not there.
 
+Bug: AttributeError: 'Cursor' object has no attribute 'find'.
 
-
+Fix: By adding mongo.db to allergens = list in the recipe function in the run.py file.
 
 ## Deployment
 
