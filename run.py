@@ -35,18 +35,13 @@ def before_request():
     if 'user' in session:
         g.user = session['user']
 
+#Home page
+@app.route('/')
+def home():
+    
+    return render_template('home.html')
 
-# Check if user is logged in
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if g.user is None:
-            flash('Unauthorized, Please log in', 'error')
-            return redirect(url_for('home'))
-        return f(*args, **kwargs)
-    return decorated_function
-
-
+#Sign up
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     """
@@ -58,7 +53,7 @@ def signup():
     # Checks if user is not already logged in
     if g.user in session:
         flash('You are already registered!')
-        return redirect(url_for('home'))
+        return redirect(url_for('login'))
 
     # Checks if the passwords match
     if request.method == 'POST':
@@ -93,10 +88,8 @@ def signup():
             return redirect(url_for('signup'))
     return render_template('signup.html')
 
-
-@app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
-def home():
+def login():
     if request.method == 'POST':
 
         # Retrieve users from database and check that username exists
@@ -149,7 +142,6 @@ def home():
 
 
 @app.route('/logout')
-@login_required
 def logout():
     # remove the user and user_id from the session if it's there
     session.pop('user', None)
@@ -185,18 +177,18 @@ def recipelist():
 
         elif 'sort' in arg:
             if request.args['sort'] == 'votes':
-                new_recipe_list = list(recipes.find().sort('upvotes', -1))
+                new_recipe_list = list(mongo.db.recipes.find().sort('upvotes', -1))
                 return render_template('recipelist.html',
                                        recipes=new_recipe_list,
                                        cuisines=cuisines, user=g.user)
             elif request.args['sort'] == 'asc':
-                new_recipe_list = list(recipes.find().sort('recipe_name', 1))
+                new_recipe_list = list(mongo.db.recipes.find().sort('recipe_name', 1))
                 return render_template('recipelist.html',
                                        recipes=new_recipe_list,
                                        cuisines=cuisines,
                                        user=g.user)
             elif request.args['sort'] == 'dsc':
-                new_recipe_list = list(recipes.find().sort('recipe_name', -1))
+                new_recipe_list = list(mongo.db.recipes.find().sort('recipe_name', -1))
                 return render_template('recipelist.html',
                                        recipes=new_recipe_list,
                                        cuisines=cuisines, user=g.user)
@@ -262,7 +254,6 @@ def remove_like(recipe_id, user):
 
 
 @app.route('/add_recipe')
-@login_required
 def add_recipe():
     allergens = mongo.db.allergens
     ingredients = mongo.db.ingredients
@@ -276,7 +267,6 @@ def add_recipe():
 
 
 @app.route('/edit_recipe/<recipe_id>/')
-@login_required
 def edit_recipe(recipe_id):
     cuisines = mongo.db.cuisines
     allergens = mongo.db.allergens
@@ -344,7 +334,6 @@ def update_recipe(recipe_id):
 
 
 @app.route('/delete_recipe/<recipe_id>')
-@login_required
 def delete_recipe(recipe_id):
     recipes.delete_one({'_id': ObjectId(recipe_id)})
     flash('Recipe successfully deleted', 'success')
@@ -382,7 +371,7 @@ def insert_recipe():
     allergens = mongo.db.allergens.find()
     # allergens = allergens.find()
     allergen_arr = []
-    for allergen in list(allergens):
+    for allergens in list(allergens):
         for key in request.form.to_dict():
                 allergen_arr.append(key)
 
