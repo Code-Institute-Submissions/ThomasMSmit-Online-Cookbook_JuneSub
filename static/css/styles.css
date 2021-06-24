@@ -1,26 +1,75 @@
+body {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: #f0ead6;
+}
+
+/*Navbar*/
+
 nav {
     position: fixed;
     z-index: 9000;
 }
 
+nav ul a {
+    color: #000000;
+
+}
+
+.navbar {
+    background-color: #d6d6d6;
+}
+
 nav .brand-logo {
     font-size: 1.4rem;
+    color: #000000;
 }
 
 .sidenav {
     z-index: 9999;
 }
 
+.home {
+    margin-left: 25rem;
+}
+
+.signup {
+    margin-right: rem;
+}
+
 h1 {
     font-size: 3.4rem;
 }
 
-body {
-    background-image: url('../assets/img/lukas-blazek-1600.jpg');
-    background-size: cover;
+/* Page footer */ 
+
+.page-footer {
+    background-color: #d6d6d6;
+    margin-top: 2.5rem;
+}
+
+/* Home page */
+
+.home-container {
+    margin: 0 auto;
+    width: 100%;
+    height: 60vh;
+    display: flex;
+    margin-top: 2rem;
+}
+
+.home-image {
     background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
+    background-size: cover;
+    position: relative;
+    border-radius: 1.5rem;
+    width: 100%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%)
+
 }
 
 .main {
@@ -32,6 +81,7 @@ body {
 
 #login-form {
     padding: 30px;
+    margin-top: 10rem;
 }
 
 .flashes {
@@ -123,7 +173,7 @@ ol>li {
 }
 
 .pagination li.active {
-    background-color: #00897b !important;
+    background-color: #878900 !important;
 }
 
 .ingredients-list li {
