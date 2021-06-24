@@ -207,10 +207,9 @@ def recipelist():
 
 @app.route('/recipe/<recipe_id>/')
 def recipe(recipe_id):
-    allergens = mongo.db.allergens.find()
     this_recipe = recipes.find_one({'_id': ObjectId(recipe_id)})
     recipe_id = str(this_recipe['_id'])
-    allergens = list(allergens.find())
+    allergens = list(mongo.db.allergens.find())
     return render_template('recipe.html', recipe=this_recipe,
                            allergens=allergens, user=g.user,
                            recipe_id=recipe_id)
