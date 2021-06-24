@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Cache-control" content="public">
     <title>The Open Cookbook</title>
     <!-- Material Design Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -18,17 +19,18 @@
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="teal darken-1">
+    <nav class="navbar">
         <div class="nav-wrapper">
-            <a href="{{ url_for('home') }}" class="brand-logo">The Open Cookbook</a>
+            <a class="brand-logo">The Open Cookbook</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-            <ul class="right hide-on-med-and-down">
-                <li><a href="{{ url_for('recipelist') }}">Recipes</a></li>
+            <ul>
+                <li class="left hide-on-med-and-down"><a class="home" href="{{ url_for('home') }}">Home</a></li>
+                <li class="left hide-on-med-and-down"><a href="{{ url_for('recipelist') }}">Recipes</a></li>
                 {% if user %}
-                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    <li class="right hide-on-med-and-down"><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% else %}
-                    <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
-                    <li><a href="{{ url_for('home') }}">Login</a></li>
+                    <li class="right hide-on-med-and-down"><a class="signup" href="{{ url_for('signup') }}">Sign Up</a></li>
+                    <li class="right hide-on-med-and-down"><a href="{{ url_for('login') }}">Login</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -40,7 +42,7 @@
             <li><a href="{{ url_for('logout') }}">Logout</a></li>
         {% else %}
             <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
-            <li><a href="{{ url_for('home') }}">Login</a></li>
+            <li><a href="{{ url_for('login') }}">Login</a></li>
         {% endif %}
     </ul>
     
@@ -58,23 +60,26 @@
     </main>
 
     
-    <footer class="page-footer mt-40 teal">
+    <footer class="page-footer">
         <div class="container">
             <div class="row">
                 <div class="col l6 s12">
-                    <h6 class="white-text">The Open Cookbook</h6>
-                    <p class="grey-text text-lighten-4">A collaborative cookbook where you can read and create recipes for the community</p>
+                    <h6 class="black-text">The Open Cookbook</h6>
+                    <p class="black-text text-lighten-4">A collaborative cookbook where you can read and create recipes for the community</p>
                 </div>
                 <div class="col l4 offset-l2 s12">
-                    <h6 class="white-text">Links</h6>
+                    <h6 class="black-text">Links</h6>
                     <ul>
                         {% if user %}
-                            <li><a class="grey-text text-lighten-3" href="{{ url_for('recipelist') }}">Recipes</a></li>
-                            <li><a class="grey-text text-lighten-3" href="{{ url_for('logout') }}">Logout</a></li>
+                            <li><a class="black-text text-lighten-3" href="{{ url_for('recipelist') }}">Recipes</a></li>
+                            <li><a class="black-text text-lighten-3" href="{{ url_for('logout') }}">Logout</a></li>
                         {% else %}
-                            <li><a class="grey-text text-lighten-3" href="{{ url_for('signup') }}">Sign Up</a></li>
-                            <li><a class="grey-text text-lighten-3" href="{{ url_for('home') }}">Login</a></li>
-                            <li><a class="grey-text text-lighten-3" href="{{ url_for('recipelist') }}">Recipes</a></li>
+                            <li><a class="black-text text-lighten-3" href="{{ url_for('home') }}">Home</a></li>
+                            <li><a class="black-text text-lighten-3" href="{{ url_for('recipelist') }}">Recipes</a></li>
+                            <li><a class="black-text text-lighten-3" href="{{ url_for('login') }}">Login</a></li>
+                            <li><a class="black-text text-lighten-3" href="{{ url_for('signup') }}">Sign Up</a></li>
+                            
+                            
                         {% endif %}
                     </ul>
                 </div>
@@ -82,8 +87,8 @@
         </div>
         <div class="footer-copyright">
             <div class="container">
-                © 2019 Keith Scully
-                <a class="grey-text text-lighten-4 right" href="https://github.com/kes2401/online-cookbook" target="_blank"><i class="fab fa-github"></i></a>
+                <p class="black-text">© 2021 Thomas Smit</p>
+                <a class="black-text text-lighten-4 right" href="https://github.com/ThomasMSmit/Online-Cookbook" target="_blank"><i class="fab fa-github"></i></a>
             </div>
         </div>
     </footer>
