@@ -1,19 +1,24 @@
 {% extends 'base.html' %} 
 {% block content %}
 
-    <div class="home-container">
+<div class="home-container">
 
-    <img class="home-image" src='static/images/Home_image.jpg'/>  
+    <img class="home-image" src='static/images/home_image.jpg'/>  
     
+</div>
+
+<div class="container-subheading">
+    <h4 class="sub-heading center-align"> Featured recipes </h4>
+    <div class="divider"></div>
+  </div>
+  
+  <!--Display 4 random recipes from the database-->
+  <div class="container-recipes">
+    <div class="row">
+      {% for recipe in featured_recipes %} 
+          {% include "recipe.html" %} 
+      {% endfor %}
     </div>
-
-
-    
-
-
-
-
-    
-
+  </div>
 
 {% endblock %}
