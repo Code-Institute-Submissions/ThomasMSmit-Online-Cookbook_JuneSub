@@ -392,6 +392,20 @@ def insert_recipe():
     flash('Recipe successfully created', 'success')
     return redirect(url_for('recipelist'))
 
+# My recipes
+@app.route('/my_recipes')
+def my_recipes():
+   
+    return render_template("my_recipes.html")
+
+# Account Settings
+@app.route("/account_settings")
+def account_settings():
+    
+    return render_template('account_settings.html')
+
+
+
 # Error Handling
 # @app.errorhandler(404)
 # def page_not_found(error):
