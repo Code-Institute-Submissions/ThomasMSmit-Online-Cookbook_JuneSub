@@ -28,10 +28,20 @@
                 <li class="left hide-on-med-and-down"><a href="{{ url_for('recipelist') }}">Recipes</a></li>
                 {% if user %}
                     <li class="right hide-on-med-and-down"><a href="{{ url_for('logout') }}">Logout</a></li>
+                    <li class="right hide-on-med-and-down"><a class='dropdown-trigger btn' href='#' data-target='dropdown'>Account</a></li>
                 {% else %}
                     <li class="right hide-on-med-and-down"><a class="signup" href="{{ url_for('signup') }}">Sign Up</a></li>
                     <li class="right hide-on-med-and-down"><a href="{{ url_for('login') }}">Login</a></li>
                 {% endif %}
+            </ul>
+
+            <!-- Dropdown Structure -->
+            <ul id='dropdown' class='dropdown-content'>
+                <li><a href="{{ url_for('my_recipes', username = session.username) }}">My Recipes</a></li>
+                <li class="divider" tabindex="-1"></li>
+                <li><a href="{{ url_for('add_recipe') }}">Create Recipe</a></li>
+                <li class="divider" tabindex="-1"></li>
+                <li><a href="{{ url_for('account_settings') }}">Account</a></li>
             </ul>
         </div>
     </nav>
