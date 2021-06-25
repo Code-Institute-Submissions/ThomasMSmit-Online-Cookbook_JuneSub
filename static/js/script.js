@@ -1,5 +1,8 @@
 $(document).ready(function(){
     
+    //Dropdown button
+    $('.dropdown-trigger').dropdown();
+
     // Initialise the mobile sidenav
     let sidenav = document.querySelectorAll('.sidenav');
     let sidenavInstance = M.Sidenav.init(sidenav);
