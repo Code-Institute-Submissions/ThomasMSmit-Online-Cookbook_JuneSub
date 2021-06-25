@@ -39,6 +39,10 @@ nav .brand-logo {
     margin-right: rem;
 }
 
+.dropdown-content {
+    min-width: 10rem;
+}
+
 h1 {
     font-size: 3.4rem;
 }
