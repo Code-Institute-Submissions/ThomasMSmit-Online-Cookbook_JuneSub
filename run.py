@@ -1,4 +1,5 @@
 import os
+import math
 from flask import (
     Flask, flash, render_template,
     redirect, request, session, url_for, g)
@@ -39,7 +40,7 @@ def before_request():
 @app.route('/')
 def home():
     
-    return render_template('home.html')
+    return render_template('home.html', user=g.user)
 
 #Sign up
 @app.route('/signup', methods=['GET', 'POST'])
@@ -277,7 +278,7 @@ def edit_recipe(recipe_id):
     this_recipe = recipes.find_one({'_id': ObjectId(recipe_id)})
     return render_template('edit_recipe.html', cuisines=cuisines,
                            ingredients=ingredients, allergens=allergens,
-                           recipe=this_recipe, user=g.user)
+                           recipe=this_recipe, user=g.user )
 
 
 @app.route('/update_recipe/<recipe_id>', methods=["POST"])
@@ -392,17 +393,42 @@ def insert_recipe():
     flash('Recipe successfully created', 'success')
     return redirect(url_for('recipelist'))
 
+
 # My recipes
-@app.route('/my_recipes')
-def my_recipes():
-   
-    return render_template("my_recipes.html")
+@app.route('/my_recipes/<user>')
+def my_recipes(user):
+    
+    my_id = users.find_one({'user': session['user']})['_id']
+    user = users.find_one({'user': session
+                                      ['user']})['user']
+    # finds all user's recipes by author id
+    my_recipes = mongo.db.recipes.find({'author': my_id})
+    # get total number of recipes created by the user
+    number_of_my_rec = my_recipes.count()
+    # Pagination, displays 8 recipes per page
+    limit_per_page = 8
+    current_page = int(request.args.get('current_page', 1))
+    pages = range(1, int(math.ceil(number_of_my_rec / limit_per_page)) + 1)
+    recipes = my_recipes.sort('_id', PyMongo).skip(
+        (current_page - 1)*limit_per_page).limit(limit_per_page)
+
+    return render_template("my_recipes.html", my_recipes=my_recipes,
+                           user=g.user, recipes=recipes,
+                           number_of_my_rec=number_of_my_rec,
+                           current_page=current_page, pages=pages,
+                           title='My Recipes')
 
 # Account Settings
-@app.route("/account_settings")
-def account_settings():
+@app.route("/account_settings/<user>")
+def account_settings(user):
     
-    return render_template('account_settings.html')
+    # prevents guest users from viewing the page
+    if 'user' not in session:
+        flash('You must be logged in to view that page!')
+    user = users.find_one({'user':
+                                    session['user']})['user']
+    return render_template('account_settings.html',
+                           user=g.user, title='Account Settings')
 
 
 
