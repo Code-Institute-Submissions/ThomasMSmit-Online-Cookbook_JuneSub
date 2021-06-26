@@ -6,6 +6,7 @@ from flask import (
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
+from forms import ChangeUsernameForm, ChangePasswordForm
 from functools import wraps
 if os.path.exists("env.py"):
     import env
@@ -124,7 +125,7 @@ def login():
             return render_template('login.html')
 
     if g.user:
-        return redirect(url_for('recipelist'))
+        return redirect(url_for('login', user=g.user))
 
     return render_template('login.html')
 
@@ -398,24 +399,16 @@ def insert_recipe():
 @app.route('/my_recipes/<user>')
 def my_recipes(user):
     
-    my_id = users.find_one({'user': session['user']})['_id']
-    user = users.find_one({'user': session
-                                      ['user']})['user']
+    my_id = users.find_one({'username': session['user']})['_id']
+    user = users.find_one({'username': session['user']})['username']
     # finds all user's recipes by author id
     my_recipes = mongo.db.recipes.find({'author': my_id})
     # get total number of recipes created by the user
     number_of_my_rec = my_recipes.count()
-    # Pagination, displays 8 recipes per page
-    limit_per_page = 8
-    current_page = int(request.args.get('current_page', 1))
-    pages = range(1, int(math.ceil(number_of_my_rec / limit_per_page)) + 1)
-    recipes = my_recipes.sort('_id', PyMongo).skip(
-        (current_page - 1)*limit_per_page).limit(limit_per_page)
-
+    
     return render_template("my_recipes.html", my_recipes=my_recipes,
                            user=g.user, recipes=recipes,
                            number_of_my_rec=number_of_my_rec,
-                           current_page=current_page, pages=pages,
                            title='My Recipes')
 
 # Account Settings
@@ -425,10 +418,69 @@ def account_settings(user):
     # prevents guest users from viewing the page
     if 'user' not in session:
         flash('You must be logged in to view that page!')
-    user = users.find_one({'user':
-                                    session['user']})['user']
+    user = users.find_one({'username':
+                                    session['user']})['username']
     return render_template('account_settings.html',
                            user=g.user, title='Account Settings')
+
+
+# Change username
+@app.route("/change_username/<user>", methods=['GET', 'POST'])
+def change_username(user):
+    '''
+    UPDATE.
+    Allows user to change the current username.
+    It calls the ChangeUsernameForm class from forms.py.
+    Checks if the new username is unique and not exist in database,
+    then clear the session and redirect user to login page.
+    '''
+    # prevents guest users from viewing the form
+    if 'user' not in session:
+        flash('You must be logged in to change username!')
+    users = mongo.db.users
+    form = ChangeUsernameForm()
+    if form.validate_on_submit():
+        # checks if the new username is unique
+        registered_user = users.find_one({'username':
+                                         request.form['new_username']})
+        if registered_user:
+            flash('Sorry, username is already taken. Try another one')
+            return redirect(url_for('change_username',
+                                    username=session["username"]))
+        else:
+            users.update_one(
+                {"username": user},
+                {"$set": {"username": request.form["new_username"]}})
+        # clear the session and redirect to login page
+        flash("Your username was updated successfully.\
+                    Please, login with your new username")
+        session.pop("username",  None)
+        return redirect(url_for("login"))
+
+    return render_template('change_username.html',
+                           user=session["user"],
+                           form=form, title='Change Username')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
