@@ -98,6 +98,12 @@ h1 {
     width: 100%;
 }
 
+.user-avatar {
+    width: 20rem;
+    height: 20rem;
+    border-radius: 50%;
+}
+
 #login-form {
     padding: 30px;
     margin-top: 10rem;
