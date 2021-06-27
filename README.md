@@ -195,6 +195,7 @@ Direct link to wireframes:
 - A Chatroom for users to talk about the recipes they created. Or to ask questions about existing recipes.
 - The ability to add instruction videos to created recipes for more in depth explanation.
 - More extensive filter options on the recipes page. For example a filter for allergies, preparation time and what kind of meal(Breakfast, lunch, Dinner).
+- Giving users the option to change there profile image.
 
 ## Technologies used
 
@@ -256,6 +257,8 @@ Fix: Added endblock to recipe.html file as it was not there.
 Bug: AttributeError: 'Cursor' object has no attribute 'find'.
 
 Fix: By adding mongo.db to allergens = list in the recipe function in the run.py file.
+
+Error: Heroku code=H10 ImportError: cannot import name 'ContextVar' from 'werkzeug.local'.
 
 ## Deployment
 
