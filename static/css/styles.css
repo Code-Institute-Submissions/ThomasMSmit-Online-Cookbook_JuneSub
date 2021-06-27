@@ -6,6 +6,14 @@ body {
     background-color: #f0ead6;
 }
 
+.main {
+    display: block;
+    box-sizing: border-box;
+    padding-top: 64px;
+    min-height: calc(100vh - 253px);
+}
+
+
 /*Navbar*/
 
 nav {
@@ -76,11 +84,18 @@ h1 {
 
 }
 
-.main {
-    display: block;
-    box-sizing: border-box;
-    padding-top: 64px;
-    min-height: calc(100vh - 253px);
+/*Account page*/
+
+.btn-main {
+    border-radius: 10rem;
+    padding: .3rem 1.4rem;
+    height: auto;
+}
+
+.btn-form {
+    margin-top: 1rem;
+    margin-bottom: 0;
+    width: 100%;
 }
 
 #login-form {
