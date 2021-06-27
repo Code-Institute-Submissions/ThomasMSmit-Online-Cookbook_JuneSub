@@ -251,7 +251,7 @@ Direct link to wireframes:
 
 Bug: jinja2.exceptions.TemplateSyntaxError: Unexpected end of template.
 
-Fix: Added %endblock% to recipe.html file as it was not there.
+Fix: Added endblock to recipe.html file as it was not there.
 
 Bug: AttributeError: 'Cursor' object has no attribute 'find'.
 
@@ -353,7 +353,7 @@ You can find more information about installing packages using pip and virtual en
 
 ### Image credits
 
-
+[Profile image](https://www.tasmeemme.com/en/store-items/restaurant-chef-avatar-character-vector-illustration-design/?item=1098046508)
 
 
 ### Code credits
