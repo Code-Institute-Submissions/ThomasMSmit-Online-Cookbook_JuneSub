@@ -3,7 +3,7 @@ import math
 from flask import (
     Flask, flash, render_template,
     redirect, request, session, url_for, g)
-from flask_pymongo import PyMongo
+from flask_pymongo import PyMongo, pymongo
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 from forms import ChangeUsernameForm, ChangePasswordForm
@@ -33,7 +33,7 @@ placeholder_image = 'http://placehold.jp/48/dedede/adadad/400x400.jpg?text=Image
 # Manage session user
 @app.before_request
 def before_request():
-    g.user = None
+    g.user=None
     if 'user' in session:
         g.user = session['user']
 
@@ -405,19 +405,24 @@ def my_recipes(user):
     my_recipes = mongo.db.recipes.find({'author': my_id})
     # get total number of recipes created by the user
     number_of_my_rec = my_recipes.count()
+
+    limit_per_page = 8
+    current_page = int(request.args.get('current_page', 1))
+    # get total of all the recipes in db
+    number_of_all_rec = mongo.db.recipes.count()
+    pages = range(1, int(math.ceil(number_of_all_rec / limit_per_page)) + 1)
+    recipes = mongo.db.recipes.find().sort('_id', pymongo.ASCENDING).skip(
+        (current_page - 1)*limit_per_page).limit(limit_per_page)
     
     return render_template("my_recipes.html", my_recipes=my_recipes,
-                           user=g.user, recipes=recipes,
+                           user=g.user, recipes=recipes, pages=pages,
                            number_of_my_rec=number_of_my_rec,
                            title='My Recipes')
 
 # Account Settings
 @app.route("/account_settings/<user>")
 def account_settings(user):
-    
-    # prevents guest users from viewing the page
-    if 'user' not in session:
-        flash('You must be logged in to view that page!')
+
     user = users.find_one({'username':
                                     session['user']})['username']
     return render_template('account_settings.html',
