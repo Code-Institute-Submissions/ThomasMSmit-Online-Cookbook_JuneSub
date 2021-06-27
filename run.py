@@ -118,7 +118,7 @@ def login():
                     # start a new session and redirect to main recipelist
                     session['user'] = username_entered
                     flash('You have successfully logged in', 'success')
-                    return redirect(url_for('recipelist'))
+                    return redirect(url_for('home'))
         else:
             # else if password does not match, flash error message
             flash('The password did not match the user profile', 'error')
@@ -427,16 +427,7 @@ def account_settings(user):
 # Change username
 @app.route("/change_username/<user>", methods=['GET', 'POST'])
 def change_username(user):
-    '''
-    UPDATE.
-    Allows user to change the current username.
-    It calls the ChangeUsernameForm class from forms.py.
-    Checks if the new username is unique and not exist in database,
-    then clear the session and redirect user to login page.
-    '''
-    # prevents guest users from viewing the form
-    if 'user' not in session:
-        flash('You must be logged in to change username!')
+    
     users = mongo.db.users
     form = ChangeUsernameForm()
     if form.validate_on_submit():
@@ -446,7 +437,7 @@ def change_username(user):
         if registered_user:
             flash('Sorry, username is already taken. Try another one')
             return redirect(url_for('change_username',
-                                    username=session["username"]))
+                                    user=session["user"]))
         else:
             users.update_one(
                 {"username": user},
@@ -462,7 +453,60 @@ def change_username(user):
                            form=form, title='Change Username')
 
 
+# Change password
+@app.route("/change_password/<user>", methods=['GET', 'POST'])
+def change_password(user):
+    
+    users = mongo.db.users
+    form = ChangePasswordForm()
+    username = users.find_one({'username': session['user']})['username']
+    old_password = request.form.get('old_password')
+    new_password = request.form.get('new_password')
+    confirm_password = request.form.get("confirm_new_password")
+    if form.validate_on_submit():
+        # checks if current password matches existing password in database
+        if check_password_hash(users.find_one({'username': username})
+                               ['password'], old_password):
+            # checks if new passwords match
+            if new_password == confirm_password:
+                # update the password and redirect to the settings page
+                users.update_one({'username': username},
+                                 {'$set': {'password': generate_password_hash
+                                           (request.form['new_password'])}})
+                flash("Success! Your password was updated.")
+                return redirect(url_for('account_settings', user=g.user))
+            else:
+                flash("New passwords do not match! Please try again")
+                return redirect(url_for("change_password",
+                                        user=session["user"]))
+        else:
+            flash('Incorrect original password! Please try again')
+            return redirect(url_for('change_password',
+                            user=session["user"]))
+    return render_template('change_password.html', user=g.user,
+                           form=form, title='Change Password')
 
+# Delete Account
+@app.route("/delete_account/<user>", methods=['GET', 'POST'])
+def delete_account(user):
+    
+    username = users.find_one({'username': session['user']})['username']
+    user = users.find_one({"username": username})
+    # checks if password matches existing password in database
+    if check_password_hash(user["password"],
+                           request.form.get("confirm_password_to_delete")):
+        # Removes all user's recipes from the Database
+        all_user_recipes = user.get("user_recipes")
+        for recipe in all_user_recipes:
+            recipes.remove({"_id": recipe})
+        # remove user from database,clear session and redirect to the home page
+        flash("Your account has been deleted.")
+        session.pop("username", None)
+        users.remove({"_id": user.get("_id")})
+        return redirect(url_for("home"))
+    else:
+        flash("Password is incorrect! Please try again")
+        return redirect(url_for("account_settings", user=g.user))
 
 
 
