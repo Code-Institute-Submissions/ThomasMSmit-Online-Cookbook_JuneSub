@@ -1,14 +1,10 @@
 {% extends 'base.html' %} 
 {% block content %}
 
-<div class="home-container">
-
-    <img class="home-image" src='static/images/home_image.jpg'/>  
-    
-</div>
-
-<div class="container-subheading">
-    <h4 class="sub-heading center-align"> Featured recipes </h4>
+  <img class="home-image responsive-img" src='static/images/home_image.jpg'/>
+   
+<div class="container">
+    <h4 class="center-align"> Featured recipes </h4>
     <div class="divider"></div>
   </div>
   
@@ -16,7 +12,7 @@
   <div class="container-recipes">
     <div class="row">
       {% for recipe in featured_recipes %} 
-          {% include "recipe.html" %} 
+          {% include 'recipecards.html' %} 
       {% endfor %}
     </div>
   </div>
