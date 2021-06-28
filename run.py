@@ -404,8 +404,8 @@ def insert_recipe():
 @app.route('/my_recipes/<user>')
 def my_recipes(user):
     
-    my_id = users.find_one({'username': session['user']})['_id']
-    user = users.find_one({'username': session['user']})['username']
+    my_id = mongo.db.users.find_one({'username': session['user']})['_id']
+    my_username = mongo.db.users.find_one({'username': session['user']})['username']
     # finds all user's recipes by author id
     my_recipes = mongo.db.recipes.find({'author': my_id})
     # get total number of recipes created by the user
@@ -413,17 +413,14 @@ def my_recipes(user):
 
     limit_per_page = 8
     current_page = int(request.args.get('current_page', 1))
-    # get total of all the recipes in db
-    number_of_all_rec = mongo.db.recipes.count()
-    pages = range(1, int(math.ceil(number_of_all_rec / limit_per_page)) + 1)
-    recipes = mongo.db.recipes.find().sort('_id').skip(
+    pages = range(1, int(math.ceil(number_of_my_rec / limit_per_page)) + 1)
+    recipes = my_recipes.sort('_id', pymongo.ASCENDING).skip(
         (current_page - 1)*limit_per_page).limit(limit_per_page)
     
     return render_template("my_recipes.html", my_recipes=my_recipes,
-                           user=g.user, recipes=recipes, pages=pages,
-                           number_of_my_rec=number_of_my_rec,
+                           user=my_username, recipes=recipes, pages=pages,
+                           number_of_my_rec=number_of_my_rec, current_page=current_page,
                            title='My Recipes')
-
 # Account Settings
 @app.route("/account_settings/<user>")
 def account_settings(user):
