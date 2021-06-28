@@ -389,7 +389,7 @@ def insert_recipe():
     new_recipe['method'] = method_steps
     new_recipe['allergens'] = allergen_arr
     new_recipe['liked_by'] = []
-    new_recipe['author'] = session['user']
+    new_recipe['author'] = session["user"]
     new_recipe['cuisine'] = request.form.get('cuisine')
     if request.form.get('image_url') == "":
         new_recipe['image_url'] = placeholder_image
@@ -400,27 +400,30 @@ def insert_recipe():
     return redirect(url_for('recipelist'))
 
 
+
 # My recipes
 @app.route('/my_recipes/<user>')
 def my_recipes(user):
     
-    my_id = mongo.db.users.find_one({'username': session['user']})['_id']
     my_username = mongo.db.users.find_one({'username': session['user']})['username']
-    # finds all user's recipes by author id
-    my_recipes = mongo.db.recipes.find({'author': my_id})
+    # finds all user's recipes by author 
+    my_recipes = mongo.db.recipes.find({'author': user})
     # get total number of recipes created by the user
     number_of_my_rec = my_recipes.count()
 
-    limit_per_page = 8
+    limit_per_page = 6
     current_page = int(request.args.get('current_page', 1))
     pages = range(1, int(math.ceil(number_of_my_rec / limit_per_page)) + 1)
-    recipes = my_recipes.sort('_id', pymongo.ASCENDING).skip(
+    recipes = my_recipes.sort('user', pymongo.ASCENDING).skip(
         (current_page - 1)*limit_per_page).limit(limit_per_page)
+    
     
     return render_template("my_recipes.html", my_recipes=my_recipes,
                            user=my_username, recipes=recipes, pages=pages,
                            number_of_my_rec=number_of_my_rec, current_page=current_page,
                            title='My Recipes')
+
+
 # Account Settings
 @app.route("/account_settings/<user>")
 def account_settings(user):
@@ -429,7 +432,6 @@ def account_settings(user):
                                     session['user']})['username']
     return render_template('account_settings.html',
                            user=g.user, title='Account Settings')
-
 
 # Change username
 @app.route("/change_username/<user>", methods=['GET', 'POST'])
@@ -458,7 +460,6 @@ def change_username(user):
     return render_template('change_username.html',
                            user=session["user"],
                            form=form, title='Change Username')
-
 
 # Change password
 @app.route("/change_password/<user>", methods=['GET', 'POST'])
