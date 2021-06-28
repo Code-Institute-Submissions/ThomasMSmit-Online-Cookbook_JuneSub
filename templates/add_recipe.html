@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <header class="header-text center-align teal-text text-darken-4">
+    <header class="header-text center-align black-text text-darken-4">
         <h1>Add Recipe</h1>
     </header>
     <div class="container col s12 m10 offset-m1 grey lighten-5 content-container" id="login-form">
@@ -36,7 +36,7 @@
                 <!-- Allergens selection section -->
                 <div class="row">
                     <div class="allergens mb-20">
-                        <h5 class="mb-10 center-align teal-text text-darken-4"><strong>Allergens</strong></h5>
+                        <h5 class="mb-10 center-align black-text text-darken-4"><strong>Allergens</strong></h5>
                         {% for allergen in allergens %}
                         <div class="input-field col s6 m3 mt-0 mb-0 height-40">
                             <p>
@@ -55,7 +55,7 @@
                 <!-- Ingredients section -->
                 <div class="row">
                     <div class="ingredients">
-                        <h5 class="mb-20 center-align teal-text text-darken-4"><strong>Ingredients</strong></h5>
+                        <h5 class="mb-20 center-align black-text text-darken-4"><strong>Ingredients</strong></h5>
                         <div class="ingredient">
                             <div class="input-field col s4">
                                 <input id="quantity" name="ingredient-qty-1" type="text" class="validate" autocomplete="off" required>
@@ -90,7 +90,7 @@
                 <!-- Method section -->
                 <div class="row">
                     <div class="method">
-                        <h5 class="mb-0 center-align teal-text text-darken-4"><strong>Method</strong></h5>
+                        <h5 class="mb-0 center-align black-text text-darken-4"><strong>Method</strong></h5>
                         <div class="input-field col s12 mt-0">
                             <ol id="steps-list" class="mt-10">
                                 <li class="step">

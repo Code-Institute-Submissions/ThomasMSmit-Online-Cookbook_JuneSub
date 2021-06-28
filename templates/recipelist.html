@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <header class="header-text center-align teal-text text-darken-4">
+    <header class="header-text center-align black-text text-darken-4">
         <h1>Recipe List</h1>
         <p class="lrg-paragraph-txt"><strong>Search, sort, filter and add recipes</strong></p>
     </header>
@@ -61,7 +61,7 @@
             </div>
             
             <div class="col s12 m6 grey-text text-darken-2 center-align s-mt-20">
-                <a href="{{ url_for('recipelist') }}" class="waves-effect waves-light btn-small ml-20">Reset</a>
+                <a href="{{ url_for('recipelist') }}" class="waves-effect waves-light btn-small ml-20 reset-button">Reset</a>
                 <p class="mt-30"><strong>
                 {% if recipes|length <= 0 %}
                     0 Results found...
@@ -94,7 +94,7 @@
                             <p class="grey-text author-text">By: <span class="grey-text text-darken-3">{{ recipe.author }}</span></p>
                         </div>
                         <div class="card-action">
-                            <a href="/recipe/{{ recipe._id }}" class="waves-effect waves-light btn-small m-4">View</a>
+                            <a href="/recipe/{{ recipe._id }}" class="waves-effect waves-light btn-small m-4 view-button">View</a>
                             {% if user == recipe.author %}
                                 <a href="/edit_recipe/{{ recipe._id }}" class="waves-effect waves-light btn-small blue darken-2 m-4"><i class="small material-icons">edit</i></a>
                                 <a href="#warning" data-target="warning-{{ recipe._id }}" class="waves-effect waves-light btn-small red darken-2 m-4 modal-trigger"><i class="small material-icons">delete</i></a>
