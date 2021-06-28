@@ -39,9 +39,14 @@ def before_request():
 
 #Home page
 @app.route('/')
+@app.route("/home")
 def home():
+
+    # Generate 4 random recipes from the DB
+    featured_recipes = ([recipe for recipe in recipes.aggregate
+                        ([{"$sample": {"size": 3}}])])
     
-    return render_template('home.html', user=g.user)
+    return render_template('home.html',featured_recipes=featured_recipes, user=g.user,  title='Home')
 
 #Sign up
 @app.route('/signup', methods=['GET', 'POST'])
