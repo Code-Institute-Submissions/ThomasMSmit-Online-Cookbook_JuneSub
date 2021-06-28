@@ -173,7 +173,7 @@ Direct link to wireframes:
 
 
 
-#### Database Structure
+
 
 ## Features
 
@@ -307,7 +307,7 @@ You can find more information about installing packages using pip and virtual en
     If you plan on pushing this application to a public repository, ensure that env.py is added to your .gitignore file.
 
 - The application can now be run locally. In your terminal, type the following command
-    python3 app.py.
+    python3 run.py
 
 **To deploy your project on Heroku, use the following steps:**
 
