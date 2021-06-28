@@ -21,7 +21,7 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-wrapper">
-            <a class="brand-logo">The Open Cookbook</a>
+            <a class="brand-logo">Online Cookbook</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul>
                 <li class="left hide-on-med-and-down"><a class="home" href="{{ url_for('home') }}">Home</a></li>
@@ -74,13 +74,14 @@
         <div class="container">
             <div class="row">
                 <div class="col l6 s12">
-                    <h6 class="black-text">The Open Cookbook</h6>
-                    <p class="black-text text-lighten-4">A collaborative cookbook where you can read and create recipes for the community</p>
+                    <h6 class="black-text">Online Cookbook</h6>
+                    <p class="black-text text-lighten-4">A cookbook where you can find and create recipes</p>
                 </div>
                 <div class="col l4 offset-l2 s12">
                     <h6 class="black-text">Links</h6>
                     <ul>
                         {% if user %}
+                            <li><a class="black-text text-lighten-3" href="{{ url_for('home') }}">Home</a></li>
                             <li><a class="black-text text-lighten-3" href="{{ url_for('recipelist') }}">Recipes</a></li>
                             <li><a class="black-text text-lighten-3" href="{{ url_for('logout') }}">Logout</a></li>
                         {% else %}
