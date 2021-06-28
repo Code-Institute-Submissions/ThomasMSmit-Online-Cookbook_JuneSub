@@ -64,24 +64,9 @@ h1 {
 
 /* Home page */
 
-.home-container {
-    margin: 0 auto;
-    width: 100%;
-    height: 60vh;
-    display: flex;
-    margin-top: 2rem;
-}
-
 .home-image {
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: relative;
     border-radius: 1.5rem;
-    width: 100%;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%)
-
+    margin-top: 3rem;
 }
 
 /*Account page*/
