@@ -153,7 +153,7 @@ def logout():
     # remove the user and user_id from the session if it's there
     session.pop('user', None)
     flash('You have successfully logged out', 'success')
-    return redirect(url_for('home'))
+    return redirect(url_for('login'))
 
 
 @app.route('/recipelist')
@@ -416,7 +416,7 @@ def my_recipes(user):
     # get total of all the recipes in db
     number_of_all_rec = mongo.db.recipes.count()
     pages = range(1, int(math.ceil(number_of_all_rec / limit_per_page)) + 1)
-    recipes = mongo.db.recipes.find().sort('_id', pymongo.ASCENDING).skip(
+    recipes = mongo.db.recipes.find().sort('_id').skip(
         (current_page - 1)*limit_per_page).limit(limit_per_page)
     
     return render_template("my_recipes.html", my_recipes=my_recipes,
@@ -456,7 +456,7 @@ def change_username(user):
         flash("Your username was updated successfully.\
                     Please, login with your new username")
         session.pop("username",  None)
-        return redirect(url_for("login"))
+        return redirect(url_for("logout"))
 
     return render_template('change_username.html',
                            user=session["user"],
@@ -484,7 +484,7 @@ def change_password(user):
                                  {'$set': {'password': generate_password_hash
                                            (request.form['new_password'])}})
                 flash("Success! Your password was updated.")
-                return redirect(url_for('account_settings', user=g.user))
+                return redirect(url_for('logout', user=g.user))
             else:
                 flash("New passwords do not match! Please try again")
                 return redirect(url_for("change_password",
