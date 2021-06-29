@@ -18,45 +18,43 @@ app.secret_key = os.environ.get("SECRET_KEY")
 
 mongo = PyMongo(app)
 
+placeholder_image = (
+    'http://placehold.jp/48/dedede/adadad/400x400.jpg?text=Image%20Not%20Available')
+
 # MongoDb collection variables
-# mogelijk weg
 users = mongo.db.users
 cuisines = mongo.db.cuisines
 recipes = mongo.db.recipes
 allergens = mongo.db.allergens
 ingredients = mongo.db.ingredients
 
-# vervangen met lokale img
-placeholder_image = 'http://placehold.jp/48/dedede/adadad/400x400.jpg?text=Image%20Not%20Available'
-
 
 # Manage session user
 @app.before_request
 def before_request():
-    g.user=None
+    g.user = None
     if 'user' in session:
         g.user = session['user']
 
-#Home page
+
+# Home page
 @app.route('/')
 @app.route("/home")
 def home():
-
     # Generate 4 random recipes from the DB
     featured_recipes = ([recipe for recipe in recipes.aggregate
                         ([{"$sample": {"size": 3}}])])
-    
-    return render_template('home.html',featured_recipes=featured_recipes, user=g.user,  title='Home')
 
-#Sign up
+    return render_template('home.html',
+                           featured_recipes=featured_recipes,
+                           user=g.user,
+                           title='Home')
+
+
+# Sign up
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    """
-    Function for registering a new user.
-    Also checks if username and/or password
-    already exists in the database.
-    Redirects to recipelist
-    """
+    
     # Checks if user is not already logged in
     if g.user in session:
         flash('You are already registered!')
@@ -86,7 +84,8 @@ def signup():
                 if user_in_db:
                     session['user'] = user_in_db['username']
                     flash("Account successfully created")
-                    return redirect(url_for('signup'))
+                    return redirect(url_for('home'))
+                                    
                 else:
                     flash("There was a problem. Please try again.")
                     return redirect(url_for('signup'))
@@ -95,10 +94,10 @@ def signup():
             return redirect(url_for('signup'))
     return render_template('signup.html')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-
         # Retrieve users from database and check that username exists
         form = request.form.to_dict()
         username_entered = request.form.get('username')
@@ -106,7 +105,6 @@ def login():
         if not this_user_in_db:
             flash('Username does not exist', 'error')
             return render_template('login.html')
-
         # once username exists in database confirm password entered
         # and that both fields are populated
         password_entered = request.form.get('password')
@@ -133,19 +131,6 @@ def login():
         return redirect(url_for('login', user=g.user))
 
     return render_template('login.html')
-
-    # Begin creating new_user dict for possible insertion to database
-    # new_user = {}
-    # new_user['username'] = request.form.get('username')
-    # new_user['email'] = request.form.get('email')
-    # Once all required field are populated without error above,
-    # insert new user into database and redirect to login page
-    # if new_user['username'] and new_user['email'] and new_user['password']:
-    # new_user['liked_recipes'] = []
-    # db.users.insert_one(new_user)
-    # flash('You have successfully signed up, you can now log in', 'success')
-    # return redirect(url_for('home'))
-    # return render_template('signup.html')
 
 
 @app.route('/logout')
@@ -184,18 +169,21 @@ def recipelist():
 
         elif 'sort' in arg:
             if request.args['sort'] == 'votes':
-                new_recipe_list = list(mongo.db.recipes.find().sort('upvotes', -1))
+                new_recipe_list = list(mongo.db.recipes.find().sort(
+                    'upvotes', -1))
                 return render_template('recipelist.html',
                                        recipes=new_recipe_list,
                                        cuisines=cuisines, user=g.user)
             elif request.args['sort'] == 'asc':
-                new_recipe_list = list(mongo.db.recipes.find().sort('recipe_name', 1))
+                new_recipe_list = list(mongo.db.recipes.find().sort(
+                    'recipe_name', 1))
                 return render_template('recipelist.html',
                                        recipes=new_recipe_list,
                                        cuisines=cuisines,
                                        user=g.user)
             elif request.args['sort'] == 'dsc':
-                new_recipe_list = list(mongo.db.recipes.find().sort('recipe_name', -1))
+                new_recipe_list = list(mongo.db.recipes.find().sort(
+                    'recipe_name', -1))
                 return render_template('recipelist.html',
                                        recipes=new_recipe_list,
                                        cuisines=cuisines, user=g.user)
@@ -212,52 +200,6 @@ def recipe(recipe_id):
     return render_template('recipe.html', recipe=this_recipe,
                            allergens=allergens, user=g.user,
                            recipe_id=recipe_id)
-
-
-@app.route('/add_like/<recipe_id>/<user>/', methods=['POST'])
-def add_like(recipe_id, user):
-
-    # update liked_by list in recipe
-    this_recipe = recipes.find_one({'_id': ObjectId(recipe_id)})
-    liked_by = list(this_recipe['liked_by'])
-    if user not in liked_by:
-        liked_by.append(user)
-    this_recipe['liked_by'] = liked_by
-    this_recipe['upvotes'] = len(liked_by)
-    recipes.update_one({'_id': ObjectId(recipe_id)}, {'$set': this_recipe})
-
-    # update liked_recipes list in user
-    this_user = users.find_one({'username': user})
-    liked_recipes = list(this_user['liked_recipes'])
-    if recipe_id not in liked_recipes:
-        liked_recipes.append(recipe_id)
-    this_user['liked_recipes'] = liked_recipes
-    users.update_one({'username': user}, {'$set': this_user})
-
-    return "Recipe Liked by User"
-
-
-@app.route('/remove_like/<recipe_id>/<user>/', methods=['POST'])
-def remove_like(recipe_id, user):
-
-    # update liked_by list in recipe
-    this_recipe = recipes.find_one({'_id': ObjectId(recipe_id)})
-    liked_by = list(this_recipe['liked_by'])
-    if user in liked_by:
-        liked_by.remove(user)
-    this_recipe['liked_by'] = liked_by
-    this_recipe['upvotes'] = len(liked_by)
-    recipes.update_one({'_id': ObjectId(recipe_id)}, {'$set': this_recipe})
-
-    # update liked_recipes list in user
-    this_user = users.find_one({'username': user})
-    liked_recipes = list(this_user['liked_recipes'])
-    if recipe_id in liked_recipes:
-        liked_recipes.remove(recipe_id)
-    this_user['liked_recipes'] = liked_recipes
-    users.update_one({'username': user}, {'$set': this_user})
-
-    return "Recipe Un-Liked by User"
 
 
 @app.route('/add_recipe')
@@ -284,12 +226,11 @@ def edit_recipe(recipe_id):
     this_recipe = recipes.find_one({'_id': ObjectId(recipe_id)})
     return render_template('edit_recipe.html', cuisines=cuisines,
                            ingredients=ingredients, allergens=allergens,
-                           recipe=this_recipe, user=g.user )
+                           recipe=this_recipe, user=g.user)
 
 
 @app.route('/update_recipe/<recipe_id>', methods=["POST"])
 def update_recipe(recipe_id):
-
     # organise method steps from form and build
     # new ordered array containing them
     step_keys = []
@@ -349,7 +290,6 @@ def delete_recipe(recipe_id):
 
 @app.route('/insert_recipe', methods=['POST'])
 def insert_recipe():
-
     # organise method steps from form and build
     # new ordered array containing them
     step_keys = []
@@ -388,7 +328,6 @@ def insert_recipe():
     new_recipe['ingredients'] = ingredients_arr
     new_recipe['method'] = method_steps
     new_recipe['allergens'] = allergen_arr
-    new_recipe['liked_by'] = []
     new_recipe['author'] = session["user"]
     new_recipe['cuisine'] = request.form.get('cuisine')
     if request.form.get('image_url') == "":
@@ -400,13 +339,12 @@ def insert_recipe():
     return redirect(url_for('recipelist'))
 
 
-
 # My recipes
 @app.route('/my_recipes/<user>')
 def my_recipes(user):
-    
-    my_username = mongo.db.users.find_one({'username': session['user']})['username']
-    # finds all user's recipes by author 
+    my_username = mongo.db.users.find_one(
+        {'username': session['user']})['username']
+    # finds all user's recipes by author
     my_recipes = mongo.db.recipes.find({'author': user})
     # get total number of recipes created by the user
     number_of_my_rec = my_recipes.count()
@@ -416,27 +354,25 @@ def my_recipes(user):
     pages = range(1, int(math.ceil(number_of_my_rec / limit_per_page)) + 1)
     recipes = my_recipes.sort('user', pymongo.ASCENDING).skip(
         (current_page - 1)*limit_per_page).limit(limit_per_page)
-    
-    
+
     return render_template("my_recipes.html", my_recipes=my_recipes,
                            user=my_username, recipes=recipes, pages=pages,
-                           number_of_my_rec=number_of_my_rec, current_page=current_page,
+                           number_of_my_rec=number_of_my_rec,
+                           current_page=current_page,
                            title='My Recipes')
 
 
 # Account Settings
 @app.route("/account_settings/<user>")
 def account_settings(user):
-
-    user = users.find_one({'username':
-                                    session['user']})['username']
+    user = users.find_one({'username': session['user']})['username']
     return render_template('account_settings.html',
                            user=g.user, title='Account Settings')
+
 
 # Change username
 @app.route("/change_username/<user>", methods=['GET', 'POST'])
 def change_username(user):
-    
     users = mongo.db.users
     form = ChangeUsernameForm()
     if form.validate_on_submit():
@@ -461,10 +397,10 @@ def change_username(user):
                            user=session["user"],
                            form=form, title='Change Username')
 
+
 # Change password
 @app.route("/change_password/<user>", methods=['GET', 'POST'])
 def change_password(user):
-    
     users = mongo.db.users
     form = ChangePasswordForm()
     username = users.find_one({'username': session['user']})['username']
@@ -494,10 +430,10 @@ def change_password(user):
     return render_template('change_password.html', user=g.user,
                            form=form, title='Change Password')
 
+
 # Delete Account
 @app.route("/delete_account/<user>", methods=['GET', 'POST'])
 def delete_account(user):
-    
     username = users.find_one({'username': session['user']})['username']
     user = users.find_one({"username": username})
     # checks if password matches existing password in database
@@ -517,33 +453,14 @@ def delete_account(user):
         return redirect(url_for("account_settings", user=g.user))
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Error Handling
-# @app.errorhandler(404)
-# def page_not_found(error):
-#     return render_template('404.html'), 404
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
 
-# @app.errorhandler(500)
-# def something_wrong(error):
-#     return render_template('500.html'), 500
+@app.errorhandler(500)
+def something_wrong(error):
+    return render_template('500.html'), 500
 
 
 # run application

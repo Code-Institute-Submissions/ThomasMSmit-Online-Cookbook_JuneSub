@@ -298,11 +298,20 @@ The website is kept as simple as possible without any unnecessary distractions. 
 
 ## Manual testing
 
+### Browser testing
+
+
+
 ### From validating
 
+- Python code has been validated for pep8 compliance with [pep8 validator](http://pep8online.com/).
+  Only 1 error remains, Line to long on line 22. But documentation says that that is alright. No further errors.
 
+- HTML code has been validated with [HTML validator](https://validator.w3.org/nu/).
 
+- CSS code has been validated with [CSS validator](https://jigsaw.w3.org/css-validator/).
 
+- JS code has been run through [Esprima](https://esprima.org/index.html).
 
 ## Bugs
 

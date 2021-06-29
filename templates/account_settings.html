@@ -1,4 +1,4 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 
 {% block content %}
 
@@ -9,53 +9,49 @@
 
     <!--Flash messages-->
     <div class="row center-align">
-        {% with messages = get_flashed_messages() %} 
-            {% if messages %} 
-                {% for message in messages %}
-                    <p class="text-red">
-                    {{ message }}
-                    </p>
-                {% endfor %} 
-            {% endif %} 
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <p class="text-red">
+            {{ message }}
+        </p>
+        {% endfor %}
+        {% endif %}
         {% endwith %}
     </div>
 
     <!--User profile avatar-->
     <div class="row">
         <div class="col s12 center-align">
-          <img id="user_avatar"
-             src="{{ url_for('static', filename='images/profile_image.png') }}"
-             class="responsive-img user-avatar" alt="Profile Avatar"/>
+            <img id="user_avatar" src="{{ url_for('static', filename='images/profile_image.png') }}"
+                class="responsive-img user-avatar" alt="Profile Avatar" />
         </div>
     </div>
 
     <div class="row center-align margin-bottom-large">
         <!--Change Username -->
         <div class="col s12 offset-m3 m6 offset-xl4 xl4">
-            <a href="{{ url_for('change_username', user = session.user) }}"
-               class="waves-effect waves-light text-shadow-small btn btn-golden
+            <a href="{{ url_for('change_username', user = session.user) }}" class="waves-effect waves-light text-shadow-small btn btn-golden
                uppercase z-depth-3 btn-main btn-form bold">
-             Change username
+                Change username
             </a>
         </div>
 
         <!--Change password -->
         <div class="col s12 offset-m3 m6 offset-xl4 xl4">
-            <a href="{{ url_for('change_password', user = session.user) }}"
-            class="waves-effect waves-yellow text-shadow-small btn btn-green
+            <a href="{{ url_for('change_password', user = session.user) }}" class="waves-effect waves-yellow text-shadow-small btn btn-green
             uppercase z-depth-3 btn-main btn-form bold">
-            Change password
+                Change password
             </a>
         </div>
-    
-        
-    
+
+
+
         <!--Delete account -->
         <div class="col s12 offset-m3 m6 offset-xl4 xl4">
-            <a href="#delete-modal-account"
-              class="modal-trigger waves-effect waves-light text-shadow-small btn
+            <a href="#delete-modal-account" class="modal-trigger waves-effect waves-light text-shadow-small btn
                delete-account uppercase z-depth-3 btn-main btn-form bold">
-              Delete account
+                Delete account
             </a>
         </div>
     </div>
@@ -67,53 +63,47 @@
         <h5 class="text-red bold">Delete Account</h5>
         <div class="divider"></div>
         <p class="text-red">
-            <i class="fas fa-exclamation-circle margin-top-small" aria-hidden="true"></i> 
+            <i class="fas fa-exclamation-circle margin-top-small" aria-hidden="true"></i>
             Deleting account will remove all your recipes from the website.
         </p>
         <h6 class="margin-top-small small-text-delete">
             Are you sure you want to delete your account?
         </h6>
 
-        <form action="{{ url_for('delete_account', user = session.user) }}"
-         method="POST">
-        <div class="row center-align margin-top-small">
-            <div class="input-field col s12">
-                <i class="material-icons prefix" aria-hidden="true">lock</i>
-                <input placeholder="Enter password"
-                       id="confirm_password_to_delete"
-                       name="confirm_password_to_delete"
-                       type="password"
-                       class="validate"
-                       required/>
-                <label for="confirm_password_to_delete">Confirm password</label>
+        <form action="{{ url_for('delete_account', user = session.user) }}" method="POST">
+            <div class="row center-align margin-top-small">
+                <div class="input-field col s12">
+                    <i class="material-icons prefix" aria-hidden="true">lock</i>
+                    <input placeholder="Enter password" id="confirm_password_to_delete"
+                        name="confirm_password_to_delete" type="password" class="validate" required />
+                    <label for="confirm_password_to_delete">Confirm password</label>
+                </div>
             </div>
-        </div>
 
-        <!--Flash messages-->
-        <div class="row center-align">
-        {% with messages = get_flashed_messages() %} 
-            {% if messages %} 
+            <!--Flash messages-->
+            <div class="row center-align">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
                 {% for message in messages %}
-                    <p class="text-red">
+                <p class="text-red">
                     {{ message }}
-                    </p>
-                {% endfor %} 
-            {% endif %} 
-        {% endwith %}
-        </div>
+                </p>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </div>
 
-        <div class="margin-top-small">
-            <a href="{{ url_for('account_settings',  user = session.user) }}"
-               class="modal-close btn btn-change btn-secondary waves-effect 
+            <div class="margin-top-small">
+                <a href="{{ url_for('account_settings',  user = session.user) }}" class="modal-close btn btn-change btn-secondary waves-effect 
                waves-light z-depth-2 btn-small-font">
-               Cancel
-            </a>
-            <button type="submit" class="btn btn-change btn-red waves-effect
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn-change btn-red waves-effect
                waves-light z-depth-2 btn-small-font">
-               Delete Account
-            </button>
-        </div>
-    </form>
-  </div>
+                    Delete Account
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
