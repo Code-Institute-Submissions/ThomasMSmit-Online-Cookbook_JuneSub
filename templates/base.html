@@ -15,9 +15,10 @@
     <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"/>
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/img/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='/images/profile_image.png') }}">
 </head>
 <body>
+    
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-wrapper">
@@ -45,17 +46,21 @@
             </ul>
         </div>
     </nav>
+
     <!-- Mobile sidebar -->
     <ul class="sidenav" id="mobile-demo">
+        <li><a href="{{ url_for('home') }}">Home</a></li>
         <li><a href="{{ url_for('recipelist') }}">Recipes</a></li>
         {% if user%}
+            <li><a href="{{ url_for('my_recipes', user = session.user) }}">My Recipes</a></li>
+            <li><a href="{{ url_for('add_recipe') }}">Create Recipe</a></li>
+            <li><a href="{{ url_for('account_settings', user = session.user) }}">Account</a></li>
             <li><a href="{{ url_for('logout') }}">Logout</a></li>
         {% else %}
             <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
             <li><a href="{{ url_for('login') }}">Login</a></li>
         {% endif %}
     </ul>
-    
     
     <!-- Main Content -->
     <main class="main">
@@ -69,7 +74,6 @@
         </div>
     </main>
 
-    
     <footer class="page-footer">
         <div class="container">
             <div class="row">
@@ -89,8 +93,6 @@
                             <li><a class="black-text text-lighten-3" href="{{ url_for('recipelist') }}">Recipes</a></li>
                             <li><a class="black-text text-lighten-3" href="{{ url_for('login') }}">Login</a></li>
                             <li><a class="black-text text-lighten-3" href="{{ url_for('signup') }}">Sign Up</a></li>
-                            
-                            
                         {% endif %}
                     </ul>
                 </div>
