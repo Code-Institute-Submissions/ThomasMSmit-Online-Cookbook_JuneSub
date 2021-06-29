@@ -119,11 +119,11 @@ I wanted to keep the design simple so you can access the info you need as fast a
 
 I made use of [Coolors](https://coolors.co/) for creating the color scheme used on this site.
 
-![Color scheme](readmecontent/images/colorpallet.png)
+![Color scheme](readmecontent/images/color_pallet.png)
 
-- F0EAD6: Is more of a light beige color to take away most white backgrounds to make the site a little less harsh on the eyes.
+- BFA68F: Is more of a beige color to take away most white backgrounds to make the site a little less harsh on the eyes.
 - FFFFFF: Standard white, mostly used as background color for the create recipe form and account page.
-- D6D6D6: Mainly used for the navigation bar on the top and bottom.
+- A9A9A9: Mainly used for the navigation bar on the top and bottom.
 - FFA500: Color used for most icons, lines and borders. But also used for most button.
 - 000000: Main font color. But also for some icons.
 
@@ -215,6 +215,7 @@ Direct link to wireframes:
 - [MongoDB Atlas](https://www.mongodb.com/)
 - [Flask](https://flask.palletsprojects.com/en/1.1.x/)
 - [PyMongo](https://api.mongodb.com/python/current/tutorial.html)
+- [Jinja](https://jinja.palletsprojects.com/en/2.11.x/)
 - [Chromium](https://www.chromium.org/Home)
 - [TinyPNG](https://tinypng.com/)
 - [For generating a table of content:](http://ecotrust-canada.github.io/markdown-toc/)
