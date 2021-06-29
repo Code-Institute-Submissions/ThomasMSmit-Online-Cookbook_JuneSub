@@ -22,12 +22,11 @@ learn how to cook
     - [Structure](#structure)
   - [Wireframes, Flowcharts and Data Models](#wireframes--flowcharts-and-data-models)
     - [Wireframes](#wireframes)
-    - [Flowcharts](#flowcharts)
-    - [Data Models](#data-models)
-      - [Database Structure](#database-structure)
+    - [Data Model](#data-model)
   - [Features](#features)
     - [Features that are implemented](#features-that-are-implemented)
     - [Features to be implemented](#features-to-be-implemented)
+    - [Unimplemented features due to time constrains](#unimplemented-features-due-to-time-constrains)
   - [Technologies used](#technologies-used)
     - [Languages](#languages)
     - [Libraries and Frameworks](#libraries-and-frameworks)
@@ -35,6 +34,7 @@ learn how to cook
   - [Testing](#testing)
     - [Testing user stories](#testing-user-stories)
   - [Manual testing](#manual-testing)
+    - [Browser testing](#browser-testing)
     - [From validating](#from-validating)
   - [Bugs](#bugs)
     - [In development](#in-development)
@@ -157,12 +157,12 @@ Direct link to wireframes:
 [Desktop](https://github.com/ThomasMSmit/Online-Cookbook/blob/master/readmecontent/wireframes/Wireframes_Desktop.pdf)
 [Tablet/Mobile](https://github.com/ThomasMSmit/Online-Cookbook/blob/master/readmecontent/wireframes/Wireframes_Tablet_Mobile.pdf)
 
-### Data Models
+Why i didn't succeed in making my project as i did in my wireframes:
+Due to time constrains i wasnt able to make the project according to my wireframes. I tried to get as close to that layout as I could.
 
+### Data Model
 
-
-
-
+[Data Model](readmecontent/images/data_Model.png)
 
 ## Features
 
@@ -172,7 +172,6 @@ Direct link to wireframes:
 - Log In and Out functionality
 - Add a new recipe
 - Edit an existing recipe
-- Save favorite recipes
 - CRUD Functions:
   - Create: possibility to create a new recipe and edit an existing recipe.
   - Read: A recipe page where the user can read all recipes that are on the website, as well as a My recipe page where logged in users can see what recipes they have added.
@@ -185,6 +184,16 @@ Direct link to wireframes:
 - The ability to add instruction videos to created recipes for more in depth explanation.
 - More extensive filter options on the recipes page. For example a filter for allergies, preparation time and what kind of meal(Breakfast, lunch, Dinner).
 - Giving users the option to change there profile image.
+- Save favorite recipes
+
+### Unimplemented features due to time constrains
+
+- Like option for recipes
+- The option to type your own ingredients when adding a recipe(To improve user experience, added helper text: If you miss an ingredient send an email to: onlinecookbook@hotmail.com(Fake email adress))
+- Type of meal
+- Number of people the recipe is for
+- Cooking time
+- Diet type of recipe
 
 ## Technologies used
 
@@ -304,7 +313,7 @@ Edge: This is the browser the project has been tested in throughout the developm
 
 Firefox: As one of the most used browsers, i checked in this browser how the site behaved. Everything seems to work as intended.
 
-Safari: To not let apple users behind i tested the site there as well. Some features seem to break here. Possibly because it doesn't work well with materialize.
+Safari: To not let apple users behind i tested the site on safari as well. Some features seem to break here. Possibly because it doesn't work well with materialize.
 
 [Lighthouse Performance](readmecontent/images/lighthouse.PNG)
 
@@ -339,6 +348,10 @@ Fix: By adding mongo.db to allergens = list in the recipe function in the run.py
 Error: Heroku code=H10 ImportError: cannot import name 'ContextVar' from 'werkzeug.local'.
 
 Fix: Changed werkzeug version to a more recent one, as that seemed to be the problem.
+
+Bug: When changing username, recipes created on the previous username stay linked to that username. Because of this you cannot edit these recipes anymore with your new username.
+
+Not Fixed: Due to time constrains I was not able to fix this issue.
 
 ## Deployment
 
@@ -431,7 +444,11 @@ You can find more information about installing packages using pip and virtual en
 
 ### Text Credits
 
+[Lamb roast recipe](https://www.compassandfork.com/recipe/cook-greek-lamb-enjoy-easter/)
 
+[Lemon drizzle cake recipe](https://www.bbcgoodfood.com/recipes/lemon-drizzle-cake)
+
+[Juicy Steakhouse Burger recipe](https://www.onceuponachef.com/recipes/steakhouse-burgers.html)
 
 ### Image credits
 
