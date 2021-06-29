@@ -439,13 +439,9 @@ def delete_account(user):
     # checks if password matches existing password in database
     if check_password_hash(user["password"],
                            request.form.get("confirm_password_to_delete")):
-        # Removes all user's recipes from the Database
-        all_user_recipes = user.get("user_recipes")
-        for recipe in all_user_recipes:
-            recipes.remove({"_id": recipe})
         # remove user from database,clear session and redirect to the home page
         flash("Your account has been deleted.")
-        session.pop("username", None)
+        session.pop("user", None)
         users.remove({"_id": user.get("_id")})
         return redirect(url_for("home"))
     else:
