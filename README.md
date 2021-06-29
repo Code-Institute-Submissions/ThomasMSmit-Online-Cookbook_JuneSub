@@ -78,12 +78,11 @@ A logged in user will benefit from the full functionality of the site. When logg
 
 ### User Stories
 
-- As a user, I would like to be able to create an account so I can add my own recipes.
+- As a user, I would like to be able to create an account.
 - As a user, I want to be able to add my own recipes.
 - As a user, I want to be able to edit my added recipes.
 - As a user, I want to be able to see my added recipes.
-- As a user, I want to be able to save recipes I like and want to use later.
-- As a user, I would like to have a account page Where I can see my username.
+- As a user, I would like to have an account page where I can see my username.
 - As a user, I want to be able to logout of my account.
 - As a user, I want to be able to change my username and password.
 - As a user, I want to be able to delete my account.
@@ -158,17 +157,7 @@ Direct link to wireframes:
 [Desktop](https://github.com/ThomasMSmit/Online-Cookbook/blob/master/readmecontent/wireframes/Wireframes_Desktop.pdf)
 [Tablet/Mobile](https://github.com/ThomasMSmit/Online-Cookbook/blob/master/readmecontent/wireframes/Wireframes_Tablet_Mobile.pdf)
 
-### Flowcharts
-
-
-
-
-
-
 ### Data Models
-
-
-
 
 
 
@@ -234,9 +223,77 @@ Direct link to wireframes:
 
 ### Testing user stories
 
+Story
 
+- As a user, I would like to be able to create an account so I can add my own recipes.
 
+***Result***
 
+The user is able to create an account using the Sign Up button in the top right corner. When the user has created an account he can go to the account button in the top right and select create recipe to add there own recipes.
+
+Story
+
+- As a user, I want to be able to add my own recipes.
+
+***Result***
+
+When the user has created an account he can go to the account button in the top right and select create recipe to add there own recipes. The user will be redirected to the add recipe page where the user can create there recipe.
+
+Story
+
+- As a user, I want to be able to edit my added recipes.
+
+***Result***
+
+A user can click the blue edit button. When they do the user will be redirected to the edit recipe page for that recipe.
+
+Story
+
+- As a user, I want to be able to see my added recipes.
+
+***Result***
+
+When the user is logged in. Go to the account button in the top right and click on my recipes. Here the user is able to see all their created recipes.
+
+Stroy
+
+- As a user, I would like to have an account page where I can see my username.
+
+***Result***
+
+When the user is logged in. Go to the account button in the top right and click on Account. Here the user is able to see there username.
+
+Story
+
+- As a user, I want to be able to logout of my account.
+
+***Result***
+
+When the user is logged in. On the top right of the page. Click on Log Out and the user will be logged out of there account.
+
+Story
+
+- As a user, I want to be able to change my username and password.
+
+***Result***
+
+When the user is logged in. Go to the account button in the top right and click on Account. Here the user is able to change there username and there password by clicking the appropriate button.
+
+Story
+
+- As a user, I want to be able to delete my account.
+
+***Result***
+
+When the user is logged in. Go to the account button in the top right and click on Account. Here the user is able to delete there account by clicking the red delete account button.
+
+Story
+
+- As a user, I want the website to be easy to use.
+
+***Result***
+
+The website is kept as simple as possible without any unnecessary distractions. The only buttons to press on the site are straight forward and easy to spot.  
 
 ## Manual testing
 
@@ -259,6 +316,8 @@ Bug: AttributeError: 'Cursor' object has no attribute 'find'.
 Fix: By adding mongo.db to allergens = list in the recipe function in the run.py file.
 
 Error: Heroku code=H10 ImportError: cannot import name 'ContextVar' from 'werkzeug.local'.
+
+Fix: Changed werkzeug version to a more recent one, as that seemed to be the problem.
 
 ## Deployment
 
@@ -353,19 +412,22 @@ You can find more information about installing packages using pip and virtual en
 
 
 
-
 ### Image credits
+
+[Home image](https://www.pexels.com/search/food/)
 
 [Profile image](https://www.tasmeemme.com/en/store-items/restaurant-chef-avatar-character-vector-illustration-design/?item=1098046508)
 
-
 ### Code credits
+
+[Irina (irinatu17)](https://github.com/irinatu17/MyCookBook)
 
 [Keith Scully](https://github.com/Code-Institute-Submissions/online-cookbook-4/blob/master/README.md)
 
 ### Special thanks
 
+A BIG thank you to Aukje van der Wal for helping me with the things i wasn't able to figure out on my own.
 
-
+A Thank you to Tutor support for helping me fix a couple issues I wasn't able to figure out by myself.
 
 **Site for educational purposes only!**
