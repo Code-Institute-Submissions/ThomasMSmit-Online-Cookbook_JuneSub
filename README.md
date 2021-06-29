@@ -300,7 +300,13 @@ The website is kept as simple as possible without any unnecessary distractions. 
 
 ### Browser testing
 
+Edge: This is the browser the project has been tested in throughout the development. Everything seems to work as intended.
 
+Firefox: As one of the most used browsers, i checked in this browser how the site behaved. Everything seems to work as intended.
+
+Safari: To not let apple users behind i tested the site there as well. Some features seem to break here. Possibly because it doesn't work well with materialize.
+
+[Lighthouse Performance](readmecontent/images/lighthouse.PNG)
 
 ### From validating
 
@@ -308,10 +314,15 @@ The website is kept as simple as possible without any unnecessary distractions. 
   Only 1 error remains, Line to long on line 22. But documentation says that that is alright. No further errors.
 
 - HTML code has been validated with [HTML validator](https://validator.w3.org/nu/).
+  Gives Error message for materialize styling. Not able to fix.
+  Gives Error for http-equiv. Not able to fix
 
 - CSS code has been validated with [CSS validator](https://jigsaw.w3.org/css-validator/).
+  No Errors were found.
 
-- JS code has been run through [Esprima](https://esprima.org/index.html).
+- JS code has been run through [JShint](https://jshint.com/).
+  Gives a couple undivined variables, something i cant resolve in this instance.
+  Gives an unused variable, but is needed so cant take it away.
 
 ## Bugs
 
