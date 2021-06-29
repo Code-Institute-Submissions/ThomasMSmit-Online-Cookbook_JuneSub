@@ -1,3 +1,5 @@
+//jshint esversion: 6
+
 $(document).ready(function () {
 
     //Dropdown button
@@ -20,7 +22,7 @@ $(document).ready(function () {
     let ingredients = [];
     if (document.URL.includes('add_recipe') || document.URL.includes('edit_recipe')) {
         for (let i = 1; i < selects[1].length; i++) {
-            ingredients.push(selects[1][i].innerHTML)
+            ingredients.push(selects[1][i].innerHTML);
         }
     }
 
@@ -38,7 +40,7 @@ $(document).ready(function () {
                 <select id="ingredient" name="ingredient-name-${ingredientCount}" required>
                     <option value="" disabled selected>Select Ingredient</option>`;
         for (let i = 0; i < ingredients.length; i++) {
-            htmlString += `<option value="${ingredients[i]}">${ingredients[i]}</option>`
+            htmlString += `<option value="${ingredients[i]}">${ingredients[i]}</option>`;
         }
         htmlString += `</select>
             </div>`;
@@ -49,7 +51,7 @@ $(document).ready(function () {
         // re-initialise selects on the page
         selects = document.querySelectorAll('select');
         selectInstances = M.FormSelect.init(selects);
-    })
+    });
 
     // Add button functionality to remove last ingredient
     $('.remove-ingredient-btn').click(function () {
@@ -57,7 +59,7 @@ $(document).ready(function () {
         if (ingredientCount >= 2) {
             ingredientCount--;
         }
-    })
+    });
 
     // Add button functionality to add new step in method
     let stepCount = $('.step').length + 1;
@@ -75,7 +77,7 @@ $(document).ready(function () {
         if (stepCount >= 2) {
             stepCount--;
         }
-    })
+    });
 
     // --- Pagination Feature ---
 
