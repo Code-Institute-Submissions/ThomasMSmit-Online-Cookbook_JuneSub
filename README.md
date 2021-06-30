@@ -324,7 +324,6 @@ Safari: To not let apple users behind i tested the site on safari as well. Some 
 
 - HTML code has been validated with [HTML validator](https://validator.w3.org/nu/).
   Gives Error message for materialize styling. Not able to fix.
-  Gives Error for http-equiv. Not able to fix
   No further errors.
 
 - CSS code has been validated with [CSS validator](https://jigsaw.w3.org/css-validator/).
