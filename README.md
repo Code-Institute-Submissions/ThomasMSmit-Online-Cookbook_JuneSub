@@ -325,13 +325,15 @@ Safari: To not let apple users behind i tested the site on safari as well. Some 
 - HTML code has been validated with [HTML validator](https://validator.w3.org/nu/).
   Gives Error message for materialize styling. Not able to fix.
   Gives Error for http-equiv. Not able to fix
+  No further errors.
 
 - CSS code has been validated with [CSS validator](https://jigsaw.w3.org/css-validator/).
   No Errors were found.
 
 - JS code has been run through [JShint](https://jshint.com/).
-  Gives a couple undivined variables, something i cant resolve in this instance.
-  Gives an unused variable, but is needed so cant take it away.
+  Gives a couple undivined variables, something i can't resolve in this instance.
+  Gives an unused variable, but is needed so can't take it away.
+  No further errors.
 
 ## Bugs
 
@@ -464,7 +466,7 @@ You can find more information about installing packages using pip and virtual en
 
 ### Special thanks
 
-A BIG thank you to Aukje van der Wal for helping me with the things i wasn't able to figure out on my own.
+A BIG thank you to [Aukje van der Wal](https://github.com/byIlsa) for helping me with the things i wasn't able to figure out on my own.
 
 A Thank you to Tutor support for helping me fix a couple issues I wasn't able to figure out by myself.
 
